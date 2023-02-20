@@ -32,7 +32,7 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.7.1'
+          flutter-version: '3.7.1' # TODO: move to ENV
           channel: 'stable'
           architecture: x64
       - name: Run pub get
@@ -41,3 +41,35 @@ jobs:
         run: flutter test
       - name: Run analyze
         run: flutter analyze
+
+  flutter_build_ios:
+    name: Flutter Build iOS
+    runs-on: macos-latest
+    timeout-minutes: 10
+
+   build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.ENV_GITHUB_ACCESS_TOKEN }}
+          ref: develop
+
+      - name: Check fvm
+        uses: kuhnroyal/flutter-fvm-config-action@v1
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.7.1'
+          channel: 'stable'
+          architecture: x64
+
+      - name: Run pub get
+        run: flutter pub get
+
+      - name: Buid iOS
+        run: flutter build ios --release --no-codesign
+
+
