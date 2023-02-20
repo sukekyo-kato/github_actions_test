@@ -1,20 +1,15 @@
-name: Flutter Test
+name: Flutter Build
 
 on:
-  pull_request:
-    types:
-      - opened
-      - synchronize
-
   push:
     branches:
       # - main
       - develop
 
 jobs:
-  flutter_test_ubuntu:
-    name: Flutter Test (ubuntu)
-    runs-on: ubuntu-latest
+  flutter_build_ios:
+    name: Flutter Build iOS
+    runs-on: macos-latest
     timeout-minutes: 10
 
     steps:
@@ -30,12 +25,18 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: "3.7.1" # TODO: move to ENV
+          flutter-version: "3.7.1"
           channel: "stable"
           architecture: x64
+
       - name: Run pub get
         run: flutter pub get
-      - name: Run test
-        run: flutter test
-      - name: Run analyze
-        run: flutter analyze
+
+      - name: Buid Android APK
+        run: flutter build apk
+
+      - name: Buid Android bundle
+        run: flutter build appbundle
+
+      - name: Buid iOS
+        run: flutter build ios --release --no-codesign
