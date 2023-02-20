@@ -1,0 +1,43 @@
+name: Flutter CI
+
+on:
+
+  pull_request:
+    types:
+      - opened
+      - synchronize
+
+  push:
+    branches:
+      # - main
+      - develop
+
+jobs:
+
+  flutter_test_ubuntu:
+    name: Flutter Test (ubuntu)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.ENV_GITHUB_ACCESS_TOKEN }}
+          ref: develop
+
+      - name: Check fvm
+        uses: kuhnroyal/flutter-fvm-config-action@v1
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.7.1'
+          channel: 'stable'
+          architecture: x64
+      - name: Run pub get
+        run: flutter pub get
+      - name: Run test
+        run: flutter test
+      - name: Run analyze
+        run: flutter analyze
