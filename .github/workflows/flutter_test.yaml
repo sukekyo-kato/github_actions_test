@@ -1,4 +1,4 @@
-name: Flutter CI
+name: Flutter Test
 
 on:
 
@@ -13,7 +13,6 @@ on:
       - develop
 
 jobs:
-
   flutter_test_ubuntu:
     name: Flutter Test (ubuntu)
     runs-on: ubuntu-latest
