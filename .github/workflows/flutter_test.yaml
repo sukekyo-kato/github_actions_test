@@ -1,7 +1,6 @@
-name: Flutter CI
+name: Flutter Test
 
 on:
-
   pull_request:
     types:
       - opened
@@ -13,7 +12,6 @@ on:
       - develop
 
 jobs:
-
   flutter_test_ubuntu:
     name: Flutter Test (ubuntu)
     runs-on: ubuntu-latest
@@ -32,8 +30,8 @@ jobs:
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.7.1'
-          channel: 'stable'
+          flutter-version: "3.7.1" # TODO: move to ENV
+          channel: "stable"
           architecture: x64
       - name: Run pub get
         run: flutter pub get
