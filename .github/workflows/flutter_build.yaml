@@ -7,9 +7,9 @@ on:
       - develop
 
 jobs:
-  flutter_build_ios:
-    name: Flutter Build iOS
-    runs-on: macos-latest
+  flutter_build_android:
+    name: Flutter Build Android
+    runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
@@ -32,11 +32,42 @@ jobs:
       - name: Run pub get
         run: flutter pub get
 
+      - name: Set up Java 11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
       - name: Buid Android APK
         run: flutter build apk
 
       - name: Buid Android bundle
         run: flutter build appbundle
+
+  flutter_build_ios:
+    name: Flutter Build iOS
+    needs: [flutter_build_android]
+    runs-on: macos-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          token: ${{ secrets.ENV_GITHUB_ACCESS_TOKEN }}
+          ref: develop
+
+      - name: Check fvm
+        uses: kuhnroyal/flutter-fvm-config-action@v1
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.7.1"
+          channel: "stable"
+          architecture: x64
+
+      - name: Run pub get
+        run: flutter pub get
 
       - name: Buid iOS
         run: flutter build ios --release --no-codesign
